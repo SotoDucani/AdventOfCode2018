@@ -21,7 +21,7 @@ function Day2Pt2 {
                 Write-Host "Diff count 1 found"
                 $IDCharArray.RemoveAt($IDDiffCharPOS)
                 Write-Host "Remaining Chars: $($IDCharArray)"
-                Write-Error -Erroraction Stop "Stop"
+                #Write-Error -Erroraction Stop "Stop"
             }
         }
     }
