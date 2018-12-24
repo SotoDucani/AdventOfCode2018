@@ -1,11 +1,11 @@
 function day3pt1 {
-    #$day3input = Get-Content ".\Day3\input.txt"
-    $day3input = Get-Content ".\Day3\exampleinput.txt"
+    $day3input = Get-Content ".\Day3\input.txt"
+    #$day3input = Get-Content ".\Day3\exampleinput.txt"
 
-    #$fabricX = 1000
-    #$fabricY = 1000
-    $fabricX = 8
-    $fabricY = 8
+    $fabricX = 1000
+    $fabricY = 1000
+    #$fabricX = 8
+    #$fabricY = 8
 
     $fabricSheet = New-Object System.Collections.ArrayList
 
@@ -16,7 +16,7 @@ function day3pt1 {
     while ($curY -lt $fabricY) {
         $curX = 0
         while ($curX -lt $fabricX) {
-            Write-Host "Building at: $($curX),$($curY)"
+            #Write-Host "Building at: $($curX),$($curY)"
             $fabricSheet.Add(@{locX = $curX; locY = $curY; claims = @()}) | Out-Null
             $curX += 1
         }
@@ -32,16 +32,28 @@ function day3pt1 {
     Write-Host "Claims: $($claimList.Count)"
 
     foreach ($claim in $claimList) {
-        $markerY = $claim.topLeftY
-        while ($markerY -lt ($claim.topLeftY + $claim.sizeY)) {
-            $markerX = $claim.topLeftX
-            while ($markerX -lt ($claim.topLeftX + $claim.sizeX)) {
-                
+        $markerY = [int]$claim.topLeftY
+        while ($markerY -lt ([int]$claim.topLeftY + [int]$claim.sizeY)) {
+            Write-Host "MarkerY: $($markerY)"
+            $markerX = [int]$claim.topLeftX
+            while ($markerX -lt ([int]$claim.topLeftX + [int]$claim.sizeX)) {
+                Write-Host "MarkerX: $($markerX)"
+                $targetSquare = $fabricSheet | Where-Object -FilterScript {$_.locX -eq $markerX -and $_.locY -eq $markerY}
+                $targetSquare.claims = $targetSquare.claims + $claim.id
                 $markerX += 1
             }
             $markerY += 1
         }
     }
 
-    return $fabricSheet,$claimList
+    $multiclaimedSquares = @()
+
+    foreach ($square in $fabricSheet) {
+        if ($square.claims.count -ge 2) {
+            $multiclaimedSquares = $multiclaimedSquares + $square
+        }
+    }
+
+    #return $fabricSheet,$claimList
+    Write-Host "Squares w/ multiple claims: $($MulticlaimedSquares.Count)"
 }
